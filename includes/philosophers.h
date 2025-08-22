@@ -1,0 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/22 08:46:27 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/22 10:44:53 by aaugusto         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PHILOSOPHERS_H
+# define PHILOSOPHERS_H
+
+// Includes
+# include "colors.h"
+# include "errors.h"
+# include <string.h>		// memset
+# include <stdio.h>			// printf
+# include <stdlib.h>		// malloc, free
+# include <unistd.h>		// write, usleep
+# include <sys/time.h>		// gettimeofday
+# include <pthread.h>		// mutex
+# include <stdbool.h>
+
+// Structs
+typedef	struct s_philosophers
+{
+	int	number_of_philosopher;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	meals_eaten;
+}				t_philosophers;
+
+typedef	struct s_data
+{
+	int	number_of_philosophers;
+	int	time_to_die;
+	int	time_to_eat;
+	int time_to_sleep;
+	t_philosophers *philosophers;
+}				t_data;
+
+// Parser
+int		parser(int argc,char **argv);
+int		number_verificator(int argc);
+
+// Utils
+bool	is_digit(char c);
+#endif
