@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 09:31:04 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 15:35:31 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:15:17 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@
 void	usage_errors_arguments(int	code);
 void	number_of_arguments(void);
 void	non_numeric(void);
+void	value_errors_arguments(int code, int	argument);
+void	negative_value(int argument);
 
 // Exit
 void	ft_exit(int	code);

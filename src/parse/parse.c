@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 10:23:16 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 15:17:55 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:21:09 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,24 @@ int	argument_verificator(char **argv)
 	return (0);
 }
 
+void	sign_verificator(char **argv)
+{
+	int	i;
+	int	number;
+
+	i = 1;
+	while (argv[i])
+	{
+		number = ft_atoi(argv[i]);
+		if (number < 0)
+			value_errors_arguments(ERR_NEGATIVE_VALUE, i);
+		i++;
+	}
+}
+
 int	parser(int argc,char **argv)
 {
+	sign_verificator(argv);
 	number_verificator(argc);
 	argument_verificator(argv);
 	return (1);

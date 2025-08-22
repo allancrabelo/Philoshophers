@@ -15,6 +15,8 @@ SRCSLIST	:= main.c \
 				parse/parse.c \
 				errors/usage_errors/usage_codes.c \
 				errors/usage_errors/usage_errors.c \
+				errors/value_errors/value_codes.c \
+				errors/value_errors/value_errors.c \
 				utils/utils.c \
 				exit/ft_exit.c
 
