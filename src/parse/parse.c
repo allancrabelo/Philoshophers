@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 10:23:16 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 16:21:09 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:48:30 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	number_verificator(int argc)
 {
-	if (argc != 5)
+	if (argc != 5 && argc != 6)
 		return (usage_errors_arguments(ERR_INVALID_NUM_ARGS), 1);
 	return (0);
 }
@@ -56,8 +56,8 @@ void	sign_verificator(char **argv)
 
 int	parser(int argc,char **argv)
 {
-	sign_verificator(argv);
 	number_verificator(argc);
+	sign_verificator(argv);
 	argument_verificator(argv);
 	return (1);
 }

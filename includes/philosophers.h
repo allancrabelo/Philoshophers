@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 08:46:27 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 16:12:51 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:50:28 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,24 @@
 # include <stdbool.h>
 
 // Structs
+typedef	struct s_table
+{
+	int		number_of_philosophers;
+	int		time_to_die;
+	int		time_to_eat;
+	int 	time_to_sleep;
+}				t_table;
+
 typedef	struct s_philosophers
 {
-	int	number_of_philosopher;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	meals_eaten;
+	int		id_number;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	int		meals_eaten;
+	t_table	*table;
 }				t_philosophers;
 
-typedef	struct s_data
-{
-	int	number_of_philosophers;
-	int	time_to_die;
-	int	time_to_eat;
-	int time_to_sleep;
-	t_philosophers *philosophers;
-}				t_data;
 
 // Parser
 int		parser(int argc,char **argv);

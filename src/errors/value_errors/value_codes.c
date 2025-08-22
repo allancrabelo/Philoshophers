@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 15:54:56 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 16:22:21 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 17:03:29 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,13 @@ void	negative_value(int argument)
 		printf(BOLD RED "[ERROR 103] Time to eat is negative\n" RESET);
 	else if (argument == 4)
 		printf(BOLD RED "[ERROR 103] Time to sleep is negative\n" RESET);
+	else if (argument == 5)
+		printf(BOLD RED "[ERROR 103] [Number of meal is negative]\n" RESET);
+	ft_exit(FT_EXIT_FAILURE);
+}
+
+void	out_of_limits_value(void)
+{
+	printf(BOLD RED "[ERROR 104] Value out of limits\n" RESET);
 	ft_exit(FT_EXIT_FAILURE);
 }
