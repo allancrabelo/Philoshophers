@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 09:31:04 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 10:44:48 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 15:35:31 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,18 @@
 #define ERR_PHILO_DIED			501
 #define ERR_MAX_REACHED			502
 
+// Exit Codes
+# define FT_EXIT_SUCESS			601
+# define FT_EXIT_FAILURE		602
+
 // [Errors Functions]:
 // General
 void	usage_errors_arguments(int	code);
-int		number_of_arguments(void);
-int		non_numeric(void);
+void	number_of_arguments(void);
+void	non_numeric(void);
+
+// Exit
+void	ft_exit(int	code);
 
 // Argumets
 #endif

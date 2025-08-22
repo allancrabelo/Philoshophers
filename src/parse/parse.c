@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 10:23:16 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 10:46:15 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 15:17:55 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	argument_verificator(char **argv)
 		j = 0;
 		while (argv[i][j])
 		{
-			if (&is_digit == false)
+			if (is_digit(argv[i][j]) == false)
 				return (usage_errors_arguments(ERR_NON_NUMERIC), 1);
 			j++;
 		}

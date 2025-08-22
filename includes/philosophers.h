@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 08:46:27 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 10:44:53 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 15:35:19 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ typedef	struct s_data
 // Parser
 int		parser(int argc,char **argv);
 int		number_verificator(int argc);
-
 // Utils
 bool	is_digit(char c);
 #endif
