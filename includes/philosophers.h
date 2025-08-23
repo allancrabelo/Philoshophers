@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 08:46:27 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 16:50:28 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:32:45 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,39 @@
 // Structs
 typedef	struct s_table
 {
-	int		number_of_philosophers;
-	int		time_to_die;
-	int		time_to_eat;
-	int 	time_to_sleep;
+	int				number_of_philos;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				eat_times;
+	pthread_mutex_t	mutex;
+	bool			end;
 }				t_table;
 
 typedef	struct s_philosophers
 {
-	int		id_number;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		meals_eaten;
-	t_table	*table;
+	int				id_number;
+	int				meal_number;
+	pthread_mutex_t	*left_silverware;
+	pthread_mutex_t	*right_silverware;
+	suseconds_t		last_meal;
+	t_table			*table;
 }				t_philosophers;
 
 
 // Parser
-int		parser(int argc,char **argv);
-int		number_verificator(int argc);
+int				parser(int argc,char **argv);
+int				number_verificator(int argc);
+
+// Init
+void			init_table(t_table	*table, char **argv);
+pthread_mutex_t	*init_silverware(t_table *table);
+t_philosophers	*init_philos(t_table *table, pthread_mutex_t *silverware);
 
 // Utils
-bool	is_digit(char c);
-int		ft_atoi(char *str);
+bool			is_digit(char c);
+int				ft_atoi(char *str);
+suseconds_t		get_time(void);
+// Frees
+void	free_silverware(pthread_mutex_t *silverware, int end);
 #endif

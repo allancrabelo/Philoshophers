@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 10:39:21 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 17:04:44 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:22:46 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,12 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	return (sign * result);
+}
+
+suseconds_t	get_time(void)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_sec / 1000));
 }

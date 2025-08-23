@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   allocation_errors.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 08:57:24 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/23 17:41:56 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/08/23 16:23:12 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/23 16:49:14 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../../../includes/philosophers.h"
 
-int	main(int argc, char **argv)
+void	memory_allocation_error(int code)
 {
-	t_table			table;
-	pthread_mutex_t	*silverware;
-	t_philosophers	*philos;
-
-	parser(argc, argv);
-	init_table(&table, argv);
-	silverware = init_silverware(&table);
-	philos = init_philos(&table, silverware);
-	return (0);
+	if (code == ERR_MALLOC_SILVERWARE)
+		memory_allocation_silverware_error();
+	if (code == ERR_MALLOC_PHILOSOPHERS)
+		memory_allocation_philosophers_error();
 }

@@ -17,8 +17,15 @@ SRCSLIST	:= main.c \
 				errors/usage_errors/usage_errors.c \
 				errors/value_errors/value_codes.c \
 				errors/value_errors/value_errors.c \
+				errors/mutex_errors/mutex_codes.c \
+				errors/mutex_errors/mutex_errors.c \
+				errors/allocation_errors/allocation_codes.c\
+				errors/allocation_errors/allocation_errors.c\
 				utils/utils.c \
-				exit/ft_exit.c
+				exit/ft_exit.c \
+				init/init_table.c \
+				init/init_silverware.c \
+				init/init_philos.c
 
 OBJSLIST	:= $(SRCSLIST:.c=.o)
 OBJS		:= $(addprefix $(OBJSDIR)/, $(OBJSLIST))

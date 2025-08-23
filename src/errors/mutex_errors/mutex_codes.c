@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mutex_codes.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 08:57:24 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/23 17:41:56 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/08/23 15:40:57 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/23 16:39:34 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../../../includes/philosophers.h"
 
-int	main(int argc, char **argv)
+void	mutex_init_table_error(void)
 {
-	t_table			table;
-	pthread_mutex_t	*silverware;
-	t_philosophers	*philos;
+	printf(BOLD RED "[ERROR 408] Failed to create TABLE mutex\n" RESET);
+	ft_exit(FT_EXIT_FAILURE);
+}
 
-	parser(argc, argv);
-	init_table(&table, argv);
-	silverware = init_silverware(&table);
-	philos = init_philos(&table, silverware);
-	return (0);
+void	mutex_init_silverware_error(void)
+{
+	printf(BOLD RED "[ERROR 409] Failed to create SILVERWARE mutex\n" RESET);
+	ft_exit(FT_EXIT_FAILURE);
 }

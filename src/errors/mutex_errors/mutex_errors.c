@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mutex_errors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 08:57:24 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/23 17:41:56 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/08/23 15:41:16 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/23 16:38:08 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../../../includes/philosophers.h"
 
-int	main(int argc, char **argv)
+void	mutex_errors(int code)
 {
-	t_table			table;
-	pthread_mutex_t	*silverware;
-	t_philosophers	*philos;
-
-	parser(argc, argv);
-	init_table(&table, argv);
-	silverware = init_silverware(&table);
-	philos = init_philos(&table, silverware);
-	return (0);
+	if (code == ERR_MUTEX_INIT_TABLE)
+		mutex_init_table_error();
+	if (code == ERR_MUTEX_INIT_SILVERWARE)
+		mutex_init_silverware_error();
 }

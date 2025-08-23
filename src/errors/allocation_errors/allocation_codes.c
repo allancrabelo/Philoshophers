@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   allocation_codes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 08:57:24 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/23 17:41:56 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/08/23 16:22:45 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/23 16:50:16 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../../../includes/philosophers.h"
 
-int	main(int argc, char **argv)
+void	memory_allocation_silverware_error(void)
 {
-	t_table			table;
-	pthread_mutex_t	*silverware;
-	t_philosophers	*philos;
+	printf(BOLD RED "[ERROR 202] Failed to allocate SILVERWARES\n" RESET);
+	ft_exit(FT_EXIT_FAILURE);
+}
 
-	parser(argc, argv);
-	init_table(&table, argv);
-	silverware = init_silverware(&table);
-	philos = init_philos(&table, silverware);
-	return (0);
+void	memory_allocation_philosophers_error(void)
+{
+	printf(BOLD RED "[ERROR 2023 Failed to allocate PHILOSOFERS\n" RESET);
+	ft_exit(FT_EXIT_FAILURE);
 }
