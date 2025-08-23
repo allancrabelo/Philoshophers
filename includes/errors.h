@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 09:31:04 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 17:03:39 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/23 08:19:22 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define ERR_NON_NUMERIC		102
 # define ERR_NEGATIVE_VALUE		103
 # define ERR_OUT_OF_LIMITS		104
+# define ERR_NULL_VALUE			105
 
 // Memory
 # define ERR_MALLOC_FAIL		201
@@ -52,6 +53,7 @@ void	non_numeric(void);
 void	value_errors_arguments(int code, int	argument);
 void	negative_value(int argument);
 void	out_of_limits_value(void);
+void	null_value(int argument);
 
 // Exit
 void	ft_exit(int	code);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 10:23:16 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 16:48:30 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/23 08:19:49 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,27 @@ void	sign_verificator(char **argv)
 	}
 }
 
+void	validation_verificator(char **argv)
+{
+	int	i;
+	int	number;
+
+	i = 1;
+	number = 0;
+	while(argv[i])
+	{
+		number = ft_atoi(argv[i]);
+		if (number == 0)
+			value_errors_arguments(ERR_NULL_VALUE, i);
+		i++;
+	}
+}
+
 int	parser(int argc,char **argv)
 {
 	number_verificator(argc);
 	sign_verificator(argv);
 	argument_verificator(argv);
+	validation_verificator(argv);
 	return (1);
 }
