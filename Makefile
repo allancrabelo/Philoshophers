@@ -25,7 +25,11 @@ SRCSLIST	:= main.c \
 				exit/ft_exit.c \
 				init/init_table.c \
 				init/init_silverware.c \
-				init/init_philos.c
+				init/init_philos.c \
+				controller/checker.c \
+				controller/loop.c \
+				controller/routine.c \
+				controller/start.c \
 
 OBJSLIST	:= $(SRCSLIST:.c=.o)
 OBJS		:= $(addprefix $(OBJSDIR)/, $(OBJSLIST))

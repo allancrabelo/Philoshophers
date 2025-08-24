@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_philos.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:43:41 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/23 17:19:05 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:22:29 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ t_philosophers	*init_philos(t_table *table, pthread_mutex_t *silverware)
 	{
 		philos[i].id_number = i + 1;
 		philos[i].meal_number = 0;
-		philos[i].right_silverware = &silverware[i];
-		philos[i].left_silverware = &silverware[(i + 1) %table->number_of_philos];
+		philos[i].left_silverware = &silverware[i];
+		philos[i].right_silverware = &silverware[(i + 1) %table->number_of_philos];
 		philos[i].last_meal = get_time();
 		philos[i].table = table;
 	}

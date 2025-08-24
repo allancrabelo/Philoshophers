@@ -1,0 +1,120 @@
+long long	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void	ft_usleep(long long ms)
+{
+	long long	start;
+
+	start = get_time();
+	while (get_time() - start < ms)
+		usleep(500);
+}
+
+void	print_status(t_philo *philo, char *msg)
+{
+	pthread_mutex_lock(&philo->args->print);
+	if (!philo->args->dead)
+		printf("%lld %d %s\n", get_time() - philo->start, philo->id + 1, msg);
+	pthread_mutex_unlock(&philo->args->print);
+}
+
+
+void	think(t_philo *philo)
+{
+	print_status(philo, "is thinking");
+}
+
+void	take_forks(t_philo *philo)
+{
+	pthread_mutex_lock(philo->lfork);
+	print_status(philo, "has taken a fork");
+	pthread_mutex_lock(philo->rfork);
+	print_status(philo, "has taken a fork");
+}
+
+void	eat(t_philo *philo)
+{
+	print_status(philo, "is eating");
+	philo->last_meal = get_time();
+	philo->meals_eaten++;
+	ft_usleep(philo->args->time_eat);
+}
+
+void	drop_forks(t_philo *philo)
+{
+	pthread_mutex_unlock(philo->lfork);
+	pthread_mutex_unlock(philo->rfork);
+}
+
+void	sleep_philo(t_philo *philo)
+{
+	print_status(philo, "is sleeping");
+	ft_usleep(philo->args->time_sleep);
+}
+
+void	*loop(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	if (philo->id % 2 == 0)
+		usleep(1000); // delay inicial pros pares
+
+	while (!philo->args->dead)
+	{
+		think(philo);
+		take_forks(philo);
+		eat(philo);
+		drop_forks(philo);
+		sleep_philo(philo);
+	}
+	return (NULL);
+}
+
+void	checker(t_philo *philo, t_args *args)
+{
+	int	i;
+
+	while (!args->dead)
+	{
+		i = -1;
+		while (++i < args->nbr_philo)
+		{
+			if ((get_time() - philo[i].last_meal) > args->time_die)
+			{
+				print_status(&philo[i], "died");
+				args->dead = 1;
+				break ;
+			}
+		}
+		usleep(1000);
+	}
+}
+
+int	start(t_args *args, pthread_mutex_t *fork, t_philo *philo)
+{
+	int	i;
+
+	i = -1;
+	while (++i < args->nbr_philo)
+	{
+		philo[i].start = get_time();
+		philo[i].last_meal = philo[i].start;
+		if (pthread_create(&philo[i].t_id, NULL,
+				loop, (void *)&philo[i]) != 0)
+			return (1);
+	}
+	checker(philo, args);
+	i = -1;
+	while (++i < args->nbr_philo)
+	{
+		if (pthread_join(philo[i].t_id, NULL) != 0)
+			return (1);
+	}
+	return (0);
+}

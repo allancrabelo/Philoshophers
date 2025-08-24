@@ -1,27 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 08:57:24 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/24 16:04:20 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/08/24 15:47:15 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/24 15:52:21 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../../includes/philosophers.h"
 
-int	main(int argc, char **argv)
+void	checker(t_philosophers *philo, t_table *table)
 {
-	t_table			table;
-	pthread_mutex_t	*silverware;
-	t_philosophers	*philos;
+	int	i;
 
-	parser(argc, argv);
-	init_table(&table, argv);
-	silverware = init_silverware(&table);
-	philos = init_philos(&table, silverware);
-	start(&table, silverware, philos);
-	return (0);
+	while (!table->end)
+	{
+		i = -1;
+		while (++i < table->number_of_philos)
+		{
+			if ((get_time() - philo[i].last_meal > table->time_to_die))
+			{
+				print_status(&philo[i], "died");
+				table->end = true;
+				break;
+			}
+		}
+	}
+	usleep(1000);
 }
