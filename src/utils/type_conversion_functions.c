@@ -1,24 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   type_conversion_functions.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 10:39:21 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/24 16:19:36 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/08/25 11:21:14 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/25 11:38:44 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philosophers.h"
 #include <limits.h>
-
-bool	is_digit(char c)
-{
-	if (c >= '0' && c <= '9')
-		return (true);
-	return (false);
-}
 
 int	ft_atoi(char *str)
 {
@@ -46,29 +39,4 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	return (sign * result);
-}
-
-suseconds_t	get_time(void)
-{
-	struct timeval tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
-void	ft_usleep(long long ms)
-{
-	long long	start;
-
-	start = get_time();
-	while (get_time() - start < ms)
-		usleep(500);
-}
-
-void	print_status(t_philosophers *philo, char *msg)
-{
-	pthread_mutex_lock(&philo->table->print);
-	if (!philo->table->end)
-		printf ("%ld %d %s\n", get_time() - philo->start, philo->id_number + 1, msg);
-	pthread_mutex_unlock(&philo->table->print);
 }

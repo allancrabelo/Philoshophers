@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 08:46:27 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/24 16:06:37 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/25 11:42:17 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,27 +60,18 @@ pthread_mutex_t	*init_silverware(t_table *table);
 t_philosophers	*init_philos(t_table *table, pthread_mutex_t *silverware);
 
 // Loop
-void	*loop(void	*table);
 
 // Checker
-void	checker(t_philosophers *philo, t_table *table);
 
 // Utils
 bool			is_digit(char c);
 int				ft_atoi(char *str);
-suseconds_t		get_time(void);
-void			ft_usleep(long long ms);
-void			print_status(t_philosophers *philo, char *msg);
+void			ft_putstr_fd(char *str, int fd);
+long long		get_time(void);
 
 // Routine
-void			think(t_philosophers *philo);
-void			take_silverware(t_philosophers *philo);
-void			eat(t_philosophers *philo);
-void			drop_silverware(t_philosophers *philo);
-void			sleep_philo(t_philosophers *philo);
 
 // Start
-void			start(t_table *table, pthread_mutex_t *silverware, t_philosophers *philo);
 
 // Frees
 void			free_silverware(pthread_mutex_t *silverware, int end);

@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 08:57:24 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/24 16:04:20 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/25 11:32:40 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char **argv)
 	init_table(&table, argv);
 	silverware = init_silverware(&table);
 	philos = init_philos(&table, silverware);
-	start(&table, silverware, philos);
+	(void)philos;
+	(void)silverware;
 	return (0);
 }

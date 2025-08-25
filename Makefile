@@ -21,7 +21,10 @@ SRCSLIST	:= main.c \
 				errors/mutex_errors/mutex_errors.c \
 				errors/allocation_errors/allocation_codes.c\
 				errors/allocation_errors/allocation_errors.c\
-				utils/utils.c \
+				utils/type_conversion_functions.c \
+				utils/classification_functions.c \
+				utils/output_functions.c \
+				utils/philosophers_utilities_functions.c \
 				exit/ft_exit.c \
 				init/init_table.c \
 				init/init_silverware.c \
