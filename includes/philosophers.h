@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 08:46:27 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/14 18:23:49 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/15 00:03:12 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 # include <sys/time.h>		// gettimeofday
 # include <pthread.h>		// mutex
 # include <stdbool.h>
+
+//Macros
+# define SILVERWARE "is holding silverware\n"
 
 // Structs
 typedef struct s_table
@@ -41,7 +44,13 @@ typedef struct s_table
 
 typedef struct s_philo
 {
-	t_table	*table;
+	int				ID_philo;
+	int				number_of_meals;
+	long			last_meal;
+	pthread_mutex_t	*left_silverware;
+	pthread_mutex_t	*right_silverware;
+	pthread_t		thread;
+	t_table			*table;
 }				t_philo;
 
 // Parser
@@ -52,7 +61,7 @@ int		number_verificator(int argc);
 int		initializer(char **argv, t_table *table, t_philo **philo);
 
 //Dead
-void	free_forks(t_table *table, int count);
+void	free_silverware(t_table *table, int count);
 
 // Loop
 
@@ -63,11 +72,12 @@ bool	is_digit(char c);
 int		ft_atoi(char *str);
 void	ft_putstr_fd(char *str, int fd);
 long	get_time(void);
+void	output(t_philo *philo, char *code);
 
 // Routine
 
 // Start
-
+int		start(t_table *table, t_philo *philo);
 // Frees
 
 #endif

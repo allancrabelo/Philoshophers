@@ -14,6 +14,7 @@ HEADERS		:= $(addprefix $(HEADIR)/, $(HEADLIST))
 SRCSLIST	:= main.c \
 				controller/initializer.c \
 				controller/dead.c \
+				controller/start.c \
 				errors/error_messages.c \
 				parse/parse.c \
 				utils/classification_functions.c \

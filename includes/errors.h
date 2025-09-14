@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 09:31:04 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/14 18:25:19 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/14 23:18:28 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 # define ERR_SEM_POST					407
 # define ERR_MUTEX_INIT_TABLE			408
 # define ERR_MUTEX_INIT_SILVERWARE		409
+# define ERR_MUTEX_INIT_PHILO			410
 
 // Simulation
 # define ERR_PHILO_DIED					501

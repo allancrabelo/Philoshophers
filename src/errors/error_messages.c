@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_messages.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 17:43:39 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/14 18:16:06 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/14 23:20:06 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,20 @@ int	error_messages_input(int code)
 int	error_messages_malloc(int code)
 {
 	if (code == ERR_MALLOC_SILVERWARE)
+		return (ft_putstr_fd(RED "[ERROR 202] Malloc error\n" RESET, 2), 0);
+	if (code == ERR_MALLOC_PHILOSOPHERS)
 		return (ft_putstr_fd(RED "[ERROR 203] Malloc error\n" RESET, 2), 0);
+
 	return (0);
 }
 
 int	error_messages_init(int code)
 {
-	if (code == ERR_MUTEX_INIT)
-		return (ft_putstr_fd(RED "[ERROR 401] Mutex init\n" RESET, 2), 0);
+	if (code == ERR_MUTEX_INIT_TABLE)
+		return (ft_putstr_fd(RED "[ERROR 408] Mutex init\n" RESET, 2), 0);	
+	if (code == ERR_MUTEX_INIT_SILVERWARE)
+		return (ft_putstr_fd(RED "[ERROR 409] Mutex init\n" RESET, 2), 0);
+	if (code == ERR_MUTEX_INIT_PHILO)
+		return (ft_putstr_fd(RED "[ERROR 410] Mutex init\n" RESET, 2), 0);
 	return (0);
 }

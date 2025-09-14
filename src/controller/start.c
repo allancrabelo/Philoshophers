@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 08:57:24 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/14 23:29:13 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/09/14 23:21:51 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/09/15 00:06:06 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../../includes/philosophers.h"
 
-int	main(int argc, char **argv)
+int	start(t_table *table, t_philo *philo)
 {
-	t_table	table;
-	t_philo	*philo;
+	int	i;
 
-	if (parser(argc, argv))
+	if (table->number_of_philosophers == 1)
+	{
+		output(philo, SILVERWARE);
 		return (EXIT_FAILURE);
-	if (initializer(argv, &table, &philo))
-		return (EXIT_FAILURE);
-	if (start(&table, philo))
-		return (EXIT_FAILURE);
-	//cleaner();
-	return (0);
+	}
+	return (EXIT_SUCCESS);
 }

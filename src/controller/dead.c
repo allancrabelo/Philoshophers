@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   dead.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:21:19 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/14 18:23:19 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/14 23:15:26 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philosophers.h"
 
-void	free_forks(t_table *table, int count)
+void	free_silverware(t_table *table, int count)
 {
 	int	i;
 
