@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 08:46:27 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/25 11:42:17 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/14 18:23:49 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,54 +25,49 @@
 # include <stdbool.h>
 
 // Structs
-typedef	struct s_table
+typedef struct s_table
 {
-	int				number_of_philos;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				eat_times;
-	pthread_mutex_t	mutex;
-	bool			end;
-	pthread_mutex_t	print;
+	int				number_of_philosophers;
+	long			time_to_die;
+	long			time_to_eat;
+	long			time_to_sleep;
+	int				number_of_meals;
+	long			start_time;
+	int				end;
+	pthread_mutex_t	*silverware;
+	pthread_mutex_t	output;
+	pthread_mutex_t	state_mutex;
 }				t_table;
 
-typedef	struct s_philosophers
+typedef struct s_philo
 {
-	int				id_number;
-	int				meal_number;
-	pthread_mutex_t	*left_silverware;
-	pthread_mutex_t	*right_silverware;
-	suseconds_t		start;
-	suseconds_t		last_meal;
-	pthread_t		thread_id;
-	t_table			*table;
-}				t_philosophers;
-
+	t_table	*table;
+}				t_philo;
 
 // Parser
-int				parser(int argc,char **argv);
-int				number_verificator(int argc);
+int		parser(int argc,char **argv);
+int		number_verificator(int argc);
 
-// Init
-void			init_table(t_table	*table, char **argv);
-pthread_mutex_t	*init_silverware(t_table *table);
-t_philosophers	*init_philos(t_table *table, pthread_mutex_t *silverware);
+// Initializer
+int		initializer(char **argv, t_table *table, t_philo **philo);
+
+//Dead
+void	free_forks(t_table *table, int count);
 
 // Loop
 
 // Checker
 
 // Utils
-bool			is_digit(char c);
-int				ft_atoi(char *str);
-void			ft_putstr_fd(char *str, int fd);
-long long		get_time(void);
+bool	is_digit(char c);
+int		ft_atoi(char *str);
+void	ft_putstr_fd(char *str, int fd);
+long	get_time(void);
 
 // Routine
 
 // Start
 
 // Frees
-void			free_silverware(pthread_mutex_t *silverware, int end);
+
 #endif

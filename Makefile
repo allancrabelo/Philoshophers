@@ -12,27 +12,14 @@ HEADLIST	:= philosophers.h
 HEADERS		:= $(addprefix $(HEADIR)/, $(HEADLIST))
 
 SRCSLIST	:= main.c \
+				controller/initializer.c \
+				controller/dead.c \
+				errors/error_messages.c \
 				parse/parse.c \
-				errors/usage_errors/usage_codes.c \
-				errors/usage_errors/usage_errors.c \
-				errors/value_errors/value_codes.c \
-				errors/value_errors/value_errors.c \
-				errors/mutex_errors/mutex_codes.c \
-				errors/mutex_errors/mutex_errors.c \
-				errors/allocation_errors/allocation_codes.c\
-				errors/allocation_errors/allocation_errors.c\
-				utils/type_conversion_functions.c \
 				utils/classification_functions.c \
 				utils/output_functions.c \
 				utils/philosophers_utilities_functions.c \
-				exit/ft_exit.c \
-				init/init_table.c \
-				init/init_silverware.c \
-				init/init_philos.c \
-				controller/checker.c \
-				controller/loop.c \
-				controller/routine.c \
-				controller/start.c \
+				utils/type_conversion_functions.c \
 
 OBJSLIST	:= $(SRCSLIST:.c=.o)
 OBJS		:= $(addprefix $(OBJSDIR)/, $(OBJSLIST))

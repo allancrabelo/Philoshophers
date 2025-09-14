@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   type_conversion_functions.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:21:14 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/25 11:38:44 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/14 17:52:38 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_atoi(char *str)
 		result = result * 10 + (str[i] - '0');
 		if ((sign == 1 && result > INT_MAX)
 			|| (sign == -1 && (-result) < INT_MIN))
-			return (value_errors_arguments(ERR_OUT_OF_LIMITS, 0), 0);
+			return ( error_messages_input(ERR_OUT_OF_LIMITS),0);
 		i++;
 	}
 	return (sign * result);

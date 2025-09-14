@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 09:31:04 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/23 16:51:06 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/14 18:25:19 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define ERR_NEGATIVE_VALUE				103
 # define ERR_OUT_OF_LIMITS				104
 # define ERR_NULL_VALUE					105
+# define ERR_EMPTY_VALUE				106
 
 // Memory
 # define ERR_MALLOC_FAIL				201
@@ -45,34 +46,13 @@
 # define ERR_PHILO_DIED					501
 # define ERR_MAX_REACHED				502
 
-// Exit Codes
-# define FT_EXIT_SUCESS					601
-# define FT_EXIT_FAILURE				602
-
 // [Errors Functions]:
 // General
-void	usage_errors_arguments(int	code);
-void	value_errors_arguments(int code, int	argument);
-void	mutex_errors(int code);
-void	memory_allocation_error(int code);
+int	error_messages_input(int code);
+int	error_messages_init(int code);
+int	error_messages_malloc(int code);
 
 // Parsing
-void	number_of_arguments(void);
-void	non_numeric(void);
-void	negative_value(int argument);
-void	out_of_limits_value(void);
-void	null_value(int argument);
 
-// Mutex
-void	mutex_init_table_error(void);
-void	mutex_init_silverware_error(void);
-void	memory_allocation_philosophers_error(void);
-
-// Exit
-void	ft_exit(int	code);
-
-// Memory Allocation
-void	memory_allocation_silverware_error(void);
-
-// Argumets
+// Arguments
 #endif

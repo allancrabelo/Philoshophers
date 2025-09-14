@@ -3,78 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 10:23:16 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/23 08:19:49 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/14 17:52:17 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philosophers.h"
 
+int	empty_verificator(char **argv)
+{
+	int	i;
+
+	i = 0;
+	while (argv[i])
+	{
+		if (argv[i][0] == '\0')
+			return(error_messages_input(ERR_EMPTY_VALUE), EXIT_FAILURE);
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
+
 int	number_verificator(int argc)
 {
 	if (argc != 5 && argc != 6)
-		return (usage_errors_arguments(ERR_INVALID_NUM_ARGS), 1);
-	return (0);
+		return (error_messages_input(ERR_INVALID_NUM_ARGS), EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
-int	argument_verificator(char **argv)
+int	digit_verificator(char **argv)
 {
 	int	i;
 	int	j;
+	int	number;
 
-	i = 1;
+	i = 1 ;
 	while (argv[i])
 	{
 		j = 0;
 		while (argv[i][j])
 		{
 			if (is_digit(argv[i][j]) == false)
-				return (usage_errors_arguments(ERR_NON_NUMERIC), 1);
+				return (error_messages_input(ERR_NON_NUMERIC), EXIT_FAILURE);
 			j++;
 		}
-		i++;
-	}
-	return (0);
-}
-
-void	sign_verificator(char **argv)
-{
-	int	i;
-	int	number;
-
-	i = 1;
-	while (argv[i])
-	{
 		number = ft_atoi(argv[i]);
 		if (number < 0)
-			value_errors_arguments(ERR_NEGATIVE_VALUE, i);
-		i++;
-	}
-}
-
-void	validation_verificator(char **argv)
-{
-	int	i;
-	int	number;
-
-	i = 1;
-	number = 0;
-	while(argv[i])
-	{
-		number = ft_atoi(argv[i]);
+			return (error_messages_input(ERR_NEGATIVE_VALUE), EXIT_FAILURE);
 		if (number == 0)
-			value_errors_arguments(ERR_NULL_VALUE, i);
+			return (error_messages_input(ERR_NULL_VALUE), EXIT_FAILURE);
 		i++;
 	}
+	return (EXIT_SUCCESS);
 }
 
 int	parser(int argc,char **argv)
 {
-	number_verificator(argc);
-	sign_verificator(argv);
-	argument_verificator(argv);
-	validation_verificator(argv);
-	return (1);
+	if (empty_verificator(argv))
+		return (EXIT_FAILURE);
+	if (number_verificator(argc))
+		return (EXIT_FAILURE);
+	if (digit_verificator(argv))
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
