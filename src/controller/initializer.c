@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 17:15:02 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 00:05:32 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/11 18:30:45 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	table_initializer(char **argv, t_table *table)
 	table->time_to_sleep = ft_atoi(argv[4]);
 	table->number_of_meals = -1;
 	table->start_time = get_time();
-	table->end = 0;
+	table->simulation_ended = 0;
 	table->silverware = NULL;
 	if (argv[5])
 		table->number_of_meals = ft_atoi(argv[5]);
@@ -61,11 +61,12 @@ static int	philosophers_initializer(t_table *table, t_philo **philo)
 		return(error_messages_malloc(ERR_MALLOC_PHILOSOPHERS), EXIT_FAILURE);
 	while (i < table->number_of_philosophers)
 	{
-		if (pthread_mutex_init(&table->silverware[i], NULL) != 0)
-		{
-			free_silverware(table, i);
-			return(error_messages_init(ERR_MUTEX_INIT_PHILO), EXIT_FAILURE);
-		}
+		(*philo)[i].ID_philo = i + 1;
+		(*philo)[i].number_of_meals = 0;
+		(*philo)[i].last_meal = table->start_time;
+		(*philo)[i].left_silverware = &table->silverware[i];
+		(*philo)[i].right_silverware = &table->silverware[(i + 1) % table->number_of_philosophers];
+		(*philo)[i].table = table;
 		i++;
 	}
 	return (EXIT_SUCCESS);

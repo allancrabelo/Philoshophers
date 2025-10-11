@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   output_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:25:06 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 00:03:42 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/11 18:15:33 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	ft_putnbr_fd(long n, int fd)
 void	output(t_philo *philo, char *code)
 {
 	long	timestamp;
-
+	
 	pthread_mutex_lock(&philo->table->state_mutex);
-	if (!philo->table->end)
+	if (!philo->table->simulation_ended)
 	{
 		timestamp = get_time() - philo->table->start_time;
 		pthread_mutex_lock(&philo->table->output);

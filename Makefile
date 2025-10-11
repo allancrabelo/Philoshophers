@@ -13,8 +13,10 @@ HEADERS		:= $(addprefix $(HEADIR)/, $(HEADLIST))
 
 SRCSLIST	:= main.c \
 				controller/initializer.c \
-				controller/dead.c \
+				controller/utilitaries.c \
 				controller/start.c \
+				controller/loop.c \
+				controller/routine.c \
 				errors/error_messages.c \
 				parse/parse.c \
 				utils/classification_functions.c \
