@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 23:21:51 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/10/11 18:09:46 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/12 09:50:05 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,12 @@ static void	monitor(t_table *table, t_philo *philo)
 			if (dead(&philo[i]))
 				return ;
 			pthread_mutex_lock(&table->state_mutex);
-			
+			if (table->number_of_meals > 0 && philo[i].number_of_meals >= table->number_of_meals)
+			{
+				count++;
+				if (count == table->number_of_philosophers)
+					table->simulation_ended = 1;
+			}
 			pthread_mutex_unlock(&table->state_mutex);
 			if (table->simulation_ended)
 				return ;
