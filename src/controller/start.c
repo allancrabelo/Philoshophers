@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 23:21:51 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/10/12 09:50:05 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/12 15:24:08 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	dead(t_philo *philo)
 	pthread_mutex_unlock(&philo->table->state_mutex);
 	if (cur - last_meal > philo->table->time_to_die)
 	{
-		output(philo, DEAD);
+		output(philo, BRED DEAD RESET);
 		pthread_mutex_lock(&philo->table->state_mutex);
 		philo->table->simulation_ended = 1;
 		pthread_mutex_unlock(&philo->table->state_mutex);
@@ -73,7 +73,7 @@ int	start(t_table *table, t_philo *philo)
 	{
 		output(philo, SILVERWARE);
 		usleep(table->time_to_die * 1000);
-		output(philo, DEAD);
+		output(philo, BRED DEAD RESET);
 		return(EXIT_FAILURE);
 	}
 	while (i < table->number_of_philosophers)

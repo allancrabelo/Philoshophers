@@ -44,7 +44,7 @@ $(NAME): $(OBJS)
 
 $(OBJSDIR)/%.o: %.c $(HEADERS)
 	@echo "$(CYAN)Compiling $< ...$(RESET)"
-	@mkdir -p $(dir $@)   # Cria diretórios pai necessários
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(DEBUGFLAGS) -c $< -o $@
 
 clean:
@@ -58,5 +58,19 @@ fclean: clean
 	@$(RM) $(NAME)
 
 re: fclean all
+
+credit:
+	@echo " =================================================="
+	@echo "     Philosophers - Dining Philosophers Problem"
+	@echo " =================================================="
+	@echo " Developer: Allan Rabelo - Fullstack Developer"
+	@echo " Institution: 42 School® Porto - 2025"
+	@echo " ------------------------------------------"
+	@echo " Email: allanaugustocarneirorabelo@gmail.com"
+	@echo " GitHub: https://github.com/allancrabelo"
+	@echo " ------------------------------------------"
+	@echo " Total Commits: $(shell git rev-list --count HEAD 2>/dev/null || echo 'N/A')"
+	@echo " Last Updated: $(shell git log -1 --format=%cd --date=short 2>/dev/null || echo 'N/A')"
+	@echo " ================================================="
 
 .PHONY: all clean fclean re
