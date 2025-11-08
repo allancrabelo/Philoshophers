@@ -1,0 +1,258 @@
+#!/bin/bash
+
+#==============================================================================#
+#                                                                              #
+#                          Philosophers - Unit Tests                           #
+#                                                     by: Allan Rabelo (2025)  #
+#==============================================================================#
+
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Function to find philosophers directory
+find_philo_directory() {
+	local possible_paths=(\
+		"../philosophers"\
+		"../../philosophers"\
+		"../philo"\
+		"../../philo"\
+		"./philosophers"\
+		"."\
+	)
+	
+	for path in "${possible_paths[@]}"; do
+		if [ -d "$path" ] && [ -f "$path/Makefile" ]; then
+			echo "$path"
+			return 0
+		fi
+	done
+	
+	local found_dir
+	found_dir=$(find . -maxdepth 2 -name "Makefile" -type f | head -1 | xargs dirname 2>/dev/null)
+	
+	if [ -n "$found_dir" ] && [ -d "$found_dir" ]; then
+		echo "$found_dir"
+		return 0
+	fi
+	
+	return 1
+}
+
+# Function to display header
+display_header() {
+	echo -e "${BLUE}"
+	echo "╔══════════════════════════════════════╗"
+	echo "║         Norminette Tests             ║"
+	echo "╚══════════════════════════════════════╝"
+	echo -e "${NC}"
+}
+
+# Function to check if norminette is installed
+check_norminette_installed() {
+	if ! command -v norminette &> /dev/null; then
+		echo -e "${RED}Error: norminette is not installed${NC}"
+		echo "Please install norminette:"
+		echo "  For 42 students: pip3 install norminette"
+		echo "  Or via brew: brew install norminette"
+		return 1
+	fi
+	return 0
+}
+
+# Function to check if philosophers directory exists
+check_philo_directory() {
+	echo -e "${YELLOW}Searching for philosophers project...${NC}"
+	
+	PHILO_DIR=$(find_philo_directory)
+	
+	if [ -z "$PHILO_DIR" ]; then
+		echo -e "${RED}Error: Could not find philosophers project directory${NC}"
+		echo "Please make sure:"
+		echo "  1. You're in the correct directory"
+		echo "  2. The philosophers project has a Makefile"
+		echo "  3. Or specify the path manually:"
+		echo "     Usage: PHILO_PATH=/path/to/philosophers ./test_norminette.sh"
+		return 1
+	fi
+	
+	echo -e "${GREEN}✓ Found project at: $PHILO_DIR${NC}"
+	return 0
+}
+
+# Function to analyze norminette output
+analyze_norminette_output() {
+	local output="$1"
+	local error_count=0
+	local warning_count=0
+	local ok_count=0
+	
+	# Count using reliable methods
+	ok_count=$(echo "$output" | grep -c "OK!" 2>/dev/null || true)
+	error_count=$(echo "$output" | grep -c "Error:" 2>/dev/null || true)
+	warning_count=$(echo "$output" | grep -c "Warning:" 2>/dev/null || true)
+	
+	# If no counts found, try alternative method
+	if [ "$ok_count" -eq 0 ] && [ "$error_count" -eq 0 ] && [ "$warning_count" -eq 0 ]; then
+		# Count lines that contain file names (simple files count)
+		ok_count=$(echo "$output" | grep -c -E "\.(c|h):" 2>/dev/null || true)
+	fi
+	
+	echo "$ok_count:$error_count:$warning_count"
+}
+
+# Function to run norminette and analyze results
+run_norminette() {
+	echo
+	echo -e "${YELLOW}Running norminette in $PHILO_DIR...${NC}"
+	echo
+
+	# Change to philosophers directory
+	cd "$PHILO_DIR" || return 1
+
+	# Run norminette and capture output
+	local norm_output
+	norm_output=$(norminette 2>&1)
+	local exit_code=$?
+	
+	# Analyze the output
+	local results
+	results=$(analyze_norminette_output "$norm_output")
+	local ok_count=$(echo "$results" | cut -d: -f1)
+	local error_count=$(echo "$results" | cut -d: -f2)
+	local warning_count=$(echo "$results" | cut -d: -f3)
+	
+	# Display the norminette output
+	if [ -n "$norm_output" ]; then
+		echo -e "${BLUE}=== Norminette Output ===${NC}"
+		echo "$norm_output" | while IFS= read -r line; do
+			if [[ "$line" == *"Error:"* ]]; then
+				echo -e "${RED}$line${NC}"
+			elif [[ "$line" == *"Warning:"* ]]; then
+				echo -e "${YELLOW}$line${NC}"
+			elif [[ "$line" == *"OK!"* ]]; then
+				echo -e "${GREEN}$line${NC}"
+			else
+				echo "$line"
+			fi
+		done
+		echo
+	fi
+	
+	# Determine result based on error count and exit code
+	if [ "$error_count" -eq 0 ] && [ "$exit_code" -eq 0 ]; then
+		echo -e "${GREEN}✓ Norminette passed successfully${NC}"
+		echo
+		echo -e "${GREEN}All files are OK! 🎉${NC}"
+		echo -e "Files checked: $ok_count"
+		echo -e "Errors: $error_count"
+		echo -e "Warnings: $warning_count"
+		return 0
+	else
+		echo -e "${RED}✗ Norminette found issues${NC}"
+		echo
+		echo -e "${RED}Summary:${NC}"
+		echo -e "Files checked: $ok_count"
+		echo -e "Errors: $error_count"
+		echo -e "Warnings: $warning_count"
+		
+		# If there are errors but exit code is 0, still consider it a failure
+		if [ "$error_count" -gt 0 ]; then
+			return 1
+		else
+			# If no errors but exit code is not 0, check if it's actually OK
+			if [ "$ok_count" -gt 0 ]; then
+				echo -e "${YELLOW}Note: Exit code was $exit_code but no errors found. Checking if this is acceptable...${NC}"
+				# Some norminette versions return non-zero even when OK
+				if [ "$warning_count" -eq 0 ]; then
+					echo -e "${GREEN}✓ No errors found, considering as passed${NC}"
+					return 0
+				else
+					return 1
+				fi
+			else
+				return 1
+			fi
+		fi
+	fi
+}
+
+# Function to check specific file types
+check_file_types() {
+	echo -e "${YELLOW}Checking project structure...${NC}"
+	
+	local has_src_files=0
+	local has_header_files=0
+	
+	# Check for C files
+	if find "$PHILO_DIR" -maxdepth 3 -name "*.c" | grep -q "."; then
+		has_src_files=1
+		c_files=$(find "$PHILO_DIR" -maxdepth 3 -name "*.c" | wc -l)
+		echo -e "${GREEN}✓ Found $c_files C source files${NC}"
+	else
+		echo -e "${RED}✗ No C source files found${NC}"
+	fi
+	
+	# Check for header files
+	if find "$PHILO_DIR" -maxdepth 3 -name "*.h" | grep -q "."; then
+		has_header_files=1
+		h_files=$(find "$PHILO_DIR" -maxdepth 3 -name "*.h" | wc -l)
+		echo -e "${GREEN}✓ Found $h_files header files${NC}"
+	else
+		echo -e "${YELLOW}⚠ No header files found${NC}"
+	fi
+	
+	# Check for Makefile
+	if [ -f "$PHILO_DIR/Makefile" ]; then
+		echo -e "${GREEN}✓ Found Makefile${NC}"
+	else
+		echo -e "${YELLOW}⚠ No Makefile found${NC}"
+	fi
+	
+	echo
+}
+
+# Main function
+main() {
+	display_header
+	
+	# Allow manual path override
+	if [ -n "$PHILO_PATH" ]; then
+		PHILO_DIR="$PHILO_PATH"
+		echo -e "${YELLOW}Using manual path: $PHILO_DIR${NC}"
+	else
+		if ! check_philo_directory; then
+			exit 1
+		fi
+	fi
+	
+	# Check prerequisites
+	if ! check_norminette_installed; then
+		exit 1
+	fi
+	
+	# Check file types
+	check_file_types
+	
+	# Run norminette
+	if run_norminette; then
+		echo
+		echo -e "${GREEN}=========================================${NC}"
+		echo -e "${GREEN}✅ ALL NORMINETTE TESTS PASSED${NC}"
+		echo -e "${GREEN}=========================================${NC}"
+		exit 0
+	else
+		echo
+		echo -e "${RED}=========================================${NC}"
+		echo -e "${RED}❌ NORMINETTE TESTS FAILED${NC}"
+		echo -e "${RED}=========================================${NC}"
+		exit 1
+	fi
+}
+
+# Run main function
+main

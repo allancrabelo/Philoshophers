@@ -2,5 +2,3 @@
 philo
 *.o
 /.obj
-/testers
-test.sh

@@ -1,0 +1,381 @@
+#!/bin/bash
+
+#==============================================================================#
+#                                                                              #
+#                          Philosophers - Unit Tests                           #
+#                                                     by: Allan Rabelo (2025)  #
+#==============================================================================#
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+# Function to find philosophers directory
+find_philo_directory() {
+	local possible_paths=(\
+		"../philosophers"\
+		"../../philosophers"\
+		"../philo"\
+		"../../philo"\
+		"./philosophers"\
+		"."\
+	)
+	
+	for path in "${possible_paths[@]}"; do
+		if [ -d "$path" ] && [ -f "$path/Makefile" ]; then
+			echo "$path"
+			return 0
+		fi
+	done
+	
+	local found_dir
+	found_dir=$(find . -maxdepth 2 -name "Makefile" -type f | head -1 | xargs dirname 2>/dev/null)
+	
+	if [ -n "$found_dir" ] && [ -d "$found_dir" ]; then
+		echo "$found_dir"
+		return 0
+	fi
+	
+	return 1
+}
+
+# Function to display header
+display_header() {
+	echo -e "${BLUE}"
+	echo "╔══════════════════════════════════════╗"
+	echo "║           Parsing Tests              ║"
+	echo "╚══════════════════════════════════════╝"
+	echo -e "${NC}"
+}
+
+# Function to compile project
+compile_project() {
+	echo -e "${YELLOW}Compiling project...${NC}"
+	
+	cd "$PHILO_DIR" || return 1
+	
+	if ! make re > /dev/null 2>&1; then
+		echo -e "${RED}✗ Compilation failed${NC}"
+		cd - > /dev/null
+		return 1
+	fi
+	
+	cd - > /dev/null
+	echo -e "${GREEN}✓ Compilation successful${NC}"
+	return 0
+}
+
+# Function to print exit code with colors
+print_exit_code() {
+	local exit_code=$1
+	case $exit_code in
+		0)
+			echo -e "${GREEN}EXIT $exit_code ✓${NC}" ;;
+		1)
+			echo -e "${RED}EXIT $exit_code ✗${NC}" ;;
+		124)
+			echo -e "${YELLOW}TIMEOUT (exit 124) ⚠${NC}" ;;
+		139)
+			echo -e "${RED}SEGFAULT (exit 139) 💥${NC}" ;;
+		*)
+			echo -e "${PURPLE}EXIT $exit_code ❓${NC}" ;;
+	esac
+}
+
+# Function to run a parsing test and check exit status
+run_parsing_test() {
+	local test_name="$1"
+	local args="$2"
+	local expected_exit="$3"
+	local description="$4"
+	
+	local output
+	local exit_code
+	local timeout_duration=1  # Short timeout for valid inputs
+	
+	echo -e "${CYAN}Test: $test_name${NC}"
+	echo -e "Command: ${YELLOW}./philo $args${NC}"
+	echo -e "Expected: $description"
+	
+	# Run with timeout
+	output=$(timeout $timeout_duration "$PHILO_EXEC" $args 2>&1)
+	exit_code=$?
+	
+	# Print the actual exit code with colors
+	echo -n "Actual: "
+	print_exit_code $exit_code
+	
+	# Handle different exit scenarios
+	if [ $exit_code -eq 124 ]; then
+		# Timeout - for valid inputs, this means program started successfully
+		if [ $expected_exit -eq 0 ]; then
+			echo -e "${GREEN}✓ PASSED - Program started successfully (had to timeout)${NC}"
+			echo
+			return 0
+		else
+			echo -e "${RED}✗ FAILED - Program should have failed but is still running${NC}"
+			echo
+			return 1
+		fi
+	elif [ $exit_code -eq 139 ]; then
+		echo -e "${RED}✗ SEGMENTATION FAULT - Critical error${NC}"
+		echo
+		return 1
+	fi
+	
+	# Check the actual exit code
+	if [ $exit_code -eq $expected_exit ]; then
+		echo -e "${GREEN}✓ PASSED - Exit code matches expected${NC}"
+		if [ -n "$output" ] && [ $expected_exit -ne 0 ]; then
+			echo -e "Output: $output"
+		fi
+		echo
+		return 0
+	else
+		echo -e "${RED}✗ FAILED - Expected exit code $expected_exit, got $exit_code${NC}"
+		if [ -n "$output" ]; then
+			echo -e "Output: $output"
+		fi
+		echo
+		return 1
+	fi
+}
+
+# Function to test valid inputs (should start successfully)
+test_valid_inputs() {
+	local valid_tests=0
+	local valid_passed=0
+	
+	echo -e "${GREEN}=== Testing Valid Inputs (should start) ===${NC}"
+	echo -e "${YELLOW}Note: Timeout (⚠) is expected for valid inputs - means program started successfully${NC}"
+	echo
+	
+	# These should all start successfully (exit 0 OR timeout because they're running)
+	
+	# Test 1: Basic valid input
+	if run_parsing_test "Basic valid" "5 800 200 200" 0 "Should start simulation"; then
+		((valid_passed++))
+	fi
+	((valid_tests++))
+	
+	# Test 2: Valid with meal count
+	if run_parsing_test "With meal count" "5 800 200 200 7" 0 "Should start with meal limit"; then
+		((valid_passed++))
+	fi
+	((valid_tests++))
+	
+	# Test 3: One philosopher (special case)
+	if run_parsing_test "One philosopher" "1 800 200 200" 0 "Should start (will die quickly)"; then
+		((valid_passed++))
+	fi
+	((valid_tests++))
+	
+	# Test 4: Many philosophers
+	if run_parsing_test "Many philosophers" "10 800 200 200" 0 "Should start with many philosophers"; then
+		((valid_passed++))
+	fi
+	((valid_tests++))
+	
+	# Test 5: Very short times
+	if run_parsing_test "Short times" "5 100 50 50" 0 "Should start with short times"; then
+		((valid_passed++))
+	fi
+	((valid_tests++))
+	
+	# Test 6: Equal eat/sleep times
+	if run_parsing_test "Equal times" "5 800 400 400" 0 "Should start with equal times"; then
+		((valid_passed++))
+	fi
+	((valid_tests++))
+	
+	# Test 7: Large numbers
+	if run_parsing_test "Large numbers" "100 100000 50000 50000" 0 "Should start with large numbers"; then
+		((valid_passed++))
+	fi
+	((valid_tests++))
+	
+	echo -e "${GREEN}Valid inputs: $valid_passed/$valid_tests passed${NC}"
+	echo
+	return $((valid_tests - valid_passed))
+}
+
+# Function to test invalid inputs (should fail immediately)
+test_invalid_inputs() {
+	local invalid_tests=0
+	local invalid_passed=0
+	
+	echo -e "${RED}=== Testing Invalid Inputs (should fail) ===${NC}"
+	echo -e "${YELLOW}Note: Should return exit code 1 immediately${NC}"
+	echo
+	
+	# These should all fail immediately with non-zero exit code
+	
+	# Test 1: No arguments
+	if run_parsing_test "No arguments" "" 1 "Should fail with no arguments"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 2: Too few arguments
+	if run_parsing_test "Too few args" "5 800 200" 1 "Should fail with insufficient arguments"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 3: Too many arguments
+	if run_parsing_test "Too many args" "5 800 200 200 10 20" 1 "Should fail with too many arguments"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 4: Negative number
+	if run_parsing_test "Negative number" "5 -800 200 200" 1 "Should fail with negative number"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 5: Zero philosophers
+	if run_parsing_test "Zero philosophers" "0 800 200 200" 1 "Should fail with zero philosophers"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 6: Zero time
+	if run_parsing_test "Zero time" "5 0 200 200" 1 "Should fail with zero time"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 7: Non-numeric arguments
+	if run_parsing_test "Non-numeric" "5 abc 200 200" 1 "Should fail with non-numeric arguments"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 8: Decimal numbers
+	if run_parsing_test "Decimal numbers" "5 800.5 200 200" 1 "Should fail with decimal numbers"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 9: Multiple negatives
+	if run_parsing_test "Multiple negatives" "-1 -800 -200 -200" 1 "Should fail with multiple negatives"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	# Test 10: Very large number that might overflow
+	if run_parsing_test "Very large number" "5 9999999999 200 200" 1 "Should fail with overflow numbers"; then
+		((invalid_passed++))
+	fi
+	((invalid_tests++))
+	
+	echo -e "${GREEN}Invalid inputs: $invalid_passed/$invalid_tests passed${NC}"
+	echo
+	return $((invalid_tests - invalid_passed))
+}
+
+# Function to test edge cases
+test_edge_cases() {
+	local edge_tests=0
+	local edge_passed=0
+	
+	echo -e "${PURPLE}=== Testing Edge Cases ===${NC}"
+	echo
+	
+	# Edge case 1: Minimum valid values
+	if run_parsing_test "Minimum values" "1 1 1 1" 0 "Minimum valid values should work"; then
+		((edge_passed++))
+	fi
+	((edge_tests++))
+	
+	# Edge case 2: Large meal count
+	if run_parsing_test "Large meal count" "5 800 200 200 99999" 0 "Large meal count should work"; then
+		((edge_passed++))
+	fi
+	((edge_tests++))
+	
+	# Edge case 3: eat_time > die_time (should still parse)
+	if run_parsing_test "Eat > die time" "5 200 300 100" 0 "Eat time > die time should parse"; then
+		((edge_passed++))
+	fi
+	((edge_tests++))
+	
+	echo -e "${GREEN}Edge cases: $edge_passed/$edge_tests passed${NC}"
+	echo
+	return $((edge_tests - edge_passed))
+}
+
+# Main function
+main() {
+	display_header
+	
+	# Find project directory
+	PHILO_DIR=$(find_philo_directory)
+	if [ -z "$PHILO_DIR" ]; then
+		echo -e "${RED}Error: Could not find philosophers project directory${NC}"
+		exit 1
+	fi
+	
+	echo -e "${GREEN}✓ Found project at: $PHILO_DIR${NC}"
+	
+	# Set executable path
+	PHILO_EXEC="$PHILO_DIR/philo"
+	
+	# Compile project
+	if ! compile_project; then
+		exit 1
+	fi
+	
+	# Check if executable exists
+	if [ ! -f "$PHILO_EXEC" ]; then
+		echo -e "${RED}Error: philo executable not found at $PHILO_EXEC${NC}"
+		exit 1
+	fi
+	
+	if [ ! -x "$PHILO_EXEC" ]; then
+		echo -e "${RED}Error: philo is not executable${NC}"
+		exit 1
+	fi
+	
+	echo -e "${GREEN}✓ philo executable found and is executable${NC}"
+	echo
+	
+	local total_failed=0
+	
+	# Run all test categories
+	echo -e "${BLUE}Starting parsing tests...${NC}"
+	echo
+	
+	test_valid_inputs
+	total_failed=$((total_failed + $?))
+	
+	test_invalid_inputs  
+	total_failed=$((total_failed + $?))
+	
+	test_edge_cases
+	total_failed=$((total_failed + $?))
+	
+	# Final summary
+	echo -e "${BLUE}=== Final Parsing Tests Summary ===${NC}"
+	
+	if [ $total_failed -eq 0 ]; then
+		echo -e "${GREEN}=========================================${NC}"
+		echo -e "${GREEN}✅ ALL PARSING TESTS PASSED${NC}"
+		echo -e "${GREEN}=========================================${NC}"
+		exit 0
+	else
+		echo -e "${RED}=========================================${NC}"
+		echo -e "${RED}❌ $total_failed TEST CATEGORIES FAILED${NC}"
+		echo -e "${RED}=========================================${NC}"
+		exit 1
+	fi
+}
+
+# Run main function
+main

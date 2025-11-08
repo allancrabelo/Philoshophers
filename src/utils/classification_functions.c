@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 10:39:21 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/14 16:27:23 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/17 08:56:43 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,3 @@ bool	is_digit(char c)
 		return (true);
 	return (false);
 }
-

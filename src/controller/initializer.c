@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 17:15:02 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/10/11 18:30:45 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/11/08 15:29:35 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,19 @@ static int	table_initializer(char **argv, t_table *table)
 static int	silverware_initializer(t_table *table)
 {
 	int	i;
+	int	size;
 
-	table->silverware = malloc(table->number_of_philosophers * sizeof(pthread_mutex_t));
+	size = table->number_of_philosophers * sizeof(pthread_mutex_t);
+	table->silverware = malloc(size);
 	if (!table->silverware)
-		return(error_messages_malloc(ERR_MALLOC_SILVERWARE), EXIT_FAILURE);
+		return (error_messages_malloc(ERR_MALLOC_SILVERWARE), EXIT_FAILURE);
 	i = 0;
 	while (i < table->number_of_philosophers)
 	{
 		if (pthread_mutex_init(&table->silverware[i], NULL) != 0)
 		{
 			free_silverware(table, i);
-			return (error_messages_init(ERR_MUTEX_INIT_SILVERWARE), EXIT_FAILURE);
+			return (error_messages_init(ERR_MUTEX_INIT_SILVERWARE), 1);
 		}
 		i++;
 	}
@@ -58,14 +60,15 @@ static int	philosophers_initializer(t_table *table, t_philo **philo)
 	i = 0;
 	*philo = malloc (table->number_of_philosophers * sizeof(t_philo));
 	if (!*philo)
-		return(error_messages_malloc(ERR_MALLOC_PHILOSOPHERS), EXIT_FAILURE);
+		return (error_messages_malloc(ERR_MALLOC_PHILOSOPHERS), EXIT_FAILURE);
 	while (i < table->number_of_philosophers)
 	{
-		(*philo)[i].ID_philo = i + 1;
+		(*philo)[i].id_philo = i + 1;
 		(*philo)[i].number_of_meals = 0;
 		(*philo)[i].last_meal = table->start_time;
 		(*philo)[i].left_silverware = &table->silverware[i];
-		(*philo)[i].right_silverware = &table->silverware[(i + 1) % table->number_of_philosophers];
+		(*philo)[i].right_silverware = \
+&table->silverware[(i + 1) % table->number_of_philosophers];
 		(*philo)[i].table = table;
 		i++;
 	}

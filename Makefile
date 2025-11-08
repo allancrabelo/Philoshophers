@@ -15,6 +15,7 @@ SRCSLIST	:= main.c \
 				controller/initializer.c \
 				controller/utilitaries.c \
 				controller/start.c \
+				controller/monitor.c \
 				controller/loop.c \
 				controller/routine.c \
 				errors/error_messages.c \
@@ -73,4 +74,4 @@ credit:
 	@echo " Last Updated: $(shell git log -1 --format=%cd --date=short 2>/dev/null || echo 'N/A')"
 	@echo " ================================================="
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re val val-helgrind val-all

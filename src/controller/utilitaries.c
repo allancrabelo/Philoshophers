@@ -6,12 +6,23 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:21:19 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/10/11 17:44:58 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/21 12:07:30 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philosophers.h"
 
+/**
+ * @brief Frees and destroys all silverware (fork) mutexes.
+ * 
+ * @details Iterates through the first 'count' mutexes, destroys them,
+ * and then frees the array. Used during cleanup or when initialization fails.
+ * Sets silverware pointer to NULL after freeing.
+ * 
+ * @param table Pointer to the table structure
+ * @param count Number of mutexes to destroy (may be less than total if error)
+ * @return void
+ */
 void	free_silverware(t_table *table, int count)
 {
 	int	i;
@@ -36,10 +47,10 @@ void	free_silverware(t_table *table, int count)
  * @param table Pointer to the table structure containing simulation state.
  * @return * int 1 if simulation has ended, 0 otherwise.
  */
-int getter_thread_safe(t_table *table)
+int	getter_thread_safe(t_table *table)
 {
 	int	result;
-	
+
 	pthread_mutex_lock(&table->state_mutex);
 	result = table->simulation_ended;
 	pthread_mutex_unlock(&table->state_mutex);

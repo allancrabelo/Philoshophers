@@ -1,0 +1,171 @@
+#!/bin/bash
+
+#==============================================================================#
+#                                                                              #
+#                          Philosophers - Unit Tests                           #
+#                                                     by: Allan Rabelo (2025)  #
+#==============================================================================#
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Default values
+RUN_NORM=false
+RUN_ALLOWED=false
+RUN_PARSING=false
+RUN_SIMULATION=false
+RUN_MEMORY=false
+RUN_ALL=false
+
+# Function to display help
+display_help() {
+    echo -e "${BLUE}Philosophers Tester - Usage${NC}"
+    echo
+    echo "  ./test                    Run all tests in order"
+    echo "  ./test -n                 Run norminette only"
+    echo "  ./test -a                 Run allowed functions only"
+    echo "  ./test -p                 Run parsing tests only"
+    echo "  ./test -s                 Run simulation tests only"
+    echo "  ./test -m                 Run memory tests only"
+    echo "  ./test -h                 Display this help"
+    echo
+    echo "Test order when running all:"
+    echo "  1. Norminette"
+    echo "  2. Allowed Functions"
+    echo "  3. Parsing"
+    echo "  4. Simulation"
+    echo "  5. Memory"
+}
+
+# Parse arguments
+if [ $# -eq 0 ]; then
+    RUN_ALL=true
+else
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -n|--norminette)
+                RUN_NORM=true
+                shift
+                ;;
+            -a|--allowed)
+                RUN_ALLOWED=true
+                shift
+                ;;
+            -p|--parsing)
+                RUN_PARSING=true
+                shift
+                ;;
+            -s|--simulation)
+                RUN_SIMULATION=true
+                shift
+                ;;
+            -m|--memory)
+                RUN_MEMORY=true
+                shift
+                ;;
+            -h|--help)
+                display_help
+                exit 0
+                ;;
+            *)
+                echo -e "${RED}Unknown option: $1${NC}"
+                display_help
+                exit 1
+                ;;
+        esac
+    done
+fi
+
+# If no specific test selected, run all
+if ! $RUN_NORM && ! $RUN_ALLOWED && ! $RUN_PARSING && ! $RUN_SIMULATION && ! $RUN_MEMORY; then
+    RUN_ALL=true
+fi
+
+# Main execution
+echo -e "${BLUE}=== Philosophers Tester ===${NC}"
+
+TESTS_PASSED=true
+
+# Function to run test and check result
+run_test() {
+    local test_name="$1"
+    local test_script="$2"
+    local test_args="$3"
+    
+    echo -e "\n${YELLOW}>>> Running $test_name...${NC}"
+    
+    # Check if test script exists
+    if [ ! -f "$test_script" ]; then
+        echo -e "${RED}✗ Test script '$test_script' not found${NC}"
+        return 1
+    fi
+    
+    # Make sure the script is executable
+    if [ ! -x "$test_script" ]; then
+        chmod +x "$test_script"
+    fi
+    
+    # Run the test with optional arguments
+    if [ -n "$test_args" ]; then
+        echo -e "${BLUE}Command: ./$test_script $test_args${NC}"
+        if "./$test_script" $test_args; then
+            echo -e "${GREEN}✓ $test_name passed${NC}"
+            return 0
+        else
+            echo -e "${RED}✗ $test_name failed${NC}"
+            return 1
+        fi
+    else
+        if "./$test_script"; then
+            echo -e "${GREEN}✓ $test_name passed${NC}"
+            return 0
+        else
+            echo -e "${RED}✗ $test_name failed${NC}"
+            return 1
+        fi
+    fi
+}
+
+# Run tests in specified order
+if $RUN_ALL || $RUN_NORM; then
+    if ! run_test "Norminette Test" "test_norminette"; then
+        TESTS_PASSED=false
+    fi
+fi
+
+if $RUN_ALL || $RUN_ALLOWED; then
+    if ! run_test "Allowed Functions Test" "test_allowed_functions"; then
+        TESTS_PASSED=false
+    fi
+fi
+
+if $RUN_ALL || $RUN_PARSING; then
+    if ! run_test "Parsing Test" "test_parsing"; then
+        TESTS_PASSED=false
+    fi
+fi
+
+if $RUN_ALL || $RUN_SIMULATION; then
+    if ! run_test "Simulation Test" "test_simulation" "-a ../philo"; then
+        TESTS_PASSED=false
+    fi
+fi
+
+if $RUN_ALL || $RUN_MEMORY; then
+    if ! run_test "Memory Test" "test_memory"; then
+        TESTS_PASSED=false
+    fi
+fi
+
+# Final result
+echo -e "\n${BLUE}=== Testing Complete ===${NC}"
+if $TESTS_PASSED; then
+    echo -e "${GREEN}🎉 All tests passed successfully!${NC}"
+else
+    echo -e "${RED}❌ Some tests failed. Please check the output above.${NC}"
+    exit 1
+fi

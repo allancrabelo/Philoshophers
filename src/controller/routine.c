@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:20:08 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/10/11 17:42:17 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/19 17:49:17 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	eat(t_philo *philo)
 	pthread_mutex_unlock(philo->left_silverware);
 	pthread_mutex_unlock(philo->right_silverware);
 }
+
 /**
  * @brief Controls the order in which philosophers take silverware.
  * 
@@ -47,18 +48,18 @@ void	eat(t_philo *philo)
  */
 void	take_silverware(t_philo *philo)
 {
-	if (philo->ID_philo % 2 == 0)
+	if (philo->id_philo % 2 == 0)
 	{
-		pthread_mutex_lock(philo->left_silverware);
-		output(philo, FORK);
 		pthread_mutex_lock(philo->right_silverware);
+		output(philo, FORK);
+		pthread_mutex_lock(philo->left_silverware);
 		output(philo, FORK);
 	}
 	else
 	{
-		pthread_mutex_lock(philo->right_silverware);
-		output(philo, FORK);
 		pthread_mutex_lock(philo->left_silverware);
+		output(philo, FORK);
+		pthread_mutex_lock(philo->right_silverware);
 		output(philo, FORK);
 	}
 }
