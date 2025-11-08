@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:20:08 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/10/19 17:49:17 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:51:39 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@
 void	eat(t_philo *philo)
 {
 	take_silverware(philo);
+	output(philo, EAT);
 	pthread_mutex_lock(&philo->table->state_mutex);
 	philo->last_meal = get_time();
 	if (philo->table->number_of_meals > 0)
 		philo->number_of_meals++;
 	pthread_mutex_unlock(&philo->table->state_mutex);
-	output(philo, EAT);
 	usleep(philo->table->time_to_eat * 1000);
 	pthread_mutex_unlock(philo->left_silverware);
 	pthread_mutex_unlock(philo->right_silverware);

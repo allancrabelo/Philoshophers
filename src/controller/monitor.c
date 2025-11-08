@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 10:00:00 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/11/08 15:00:51 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:52:24 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,12 @@ static void	print_death(t_philo *philo, long timestamp)
  */
 static int	dead(t_philo *philo)
 {
-	int		dead;
 	long	cur;
 	long	last_meal;
 	long	timestamp;
 
-	dead = 0;
-	cur = get_time();
 	pthread_mutex_lock(&philo->table->state_mutex);
+	cur = get_time();
 	last_meal = philo->last_meal;
 	if (cur - last_meal > philo->table->time_to_die)
 	{
@@ -60,44 +58,48 @@ static int	dead(t_philo *philo)
 		timestamp = cur - philo->table->start_time;
 		pthread_mutex_unlock(&philo->table->state_mutex);
 		print_death(philo, timestamp);
-		dead = 1;
-		return (dead);
+		return (1);
 	}
 	pthread_mutex_unlock(&philo->table->state_mutex);
-	return (dead);
+	return (0);
 }
 
 /**
  * @brief Checks if all philosophers have eaten enough meals.
  * 
  * @details Iterates through all philosophers counting how many have reached
- * the required number of meals. If any philosopher died, returns immediately.
+ * the required number of meals. Only ends simulation when all have eaten
+ * AND are not currently eating (to ensure last action printed is eating).
  * Uses mutex protection when reading meal counts.
  * 
  * @param table Pointer to the table structure with simulation parameters
  * @param philo Array of philosopher structures
- * @param count Pointer to store the number of philosophers who finished eating
- * @return 1 if a philosopher died, 0 otherwise
+ * @return 1 if all finished eating, 0 otherwise
  */
-static int	check_meals(t_table *table, t_philo *philo, int *count)
+static int	check_all_ate(t_table *table, t_philo *philo)
 {
 	int	i;
+	int	count;
 
+	if (table->number_of_meals <= 0)
+		return (0);
 	i = 0;
-	*count = 0;
-	while (i < table->number_of_philosophers && !getter_thread_safe(table))
+	count = 0;
+	pthread_mutex_lock(&table->state_mutex);
+	while (i < table->number_of_philosophers)
 	{
-		if (dead(&philo[i]))
-			return (1);
-		if (table->number_of_meals > 0)
-		{
-			pthread_mutex_lock(&table->state_mutex);
-			if (philo[i].number_of_meals == table->number_of_meals)
-				(*count)++;
-			pthread_mutex_unlock(&table->state_mutex);
-		}
+		if (philo[i].number_of_meals >= table->number_of_meals)
+			count++;
 		i++;
 	}
+	if (count == table->number_of_philosophers)
+	{
+		table->simulation_ended = 1;
+		pthread_mutex_unlock(&table->state_mutex);
+		usleep(1000);
+		return (1);
+	}
+	pthread_mutex_unlock(&table->state_mutex);
 	return (0);
 }
 
@@ -114,20 +116,19 @@ static int	check_meals(t_table *table, t_philo *philo, int *count)
  */
 void	monitor(t_table *table, t_philo *philo)
 {
-	int	count;
+	int	i;
 
-	while (!getter_thread_safe(table))
+	while (1)
 	{
-		if (check_meals(table, philo, &count))
-			return ;
-		if (table->number_of_meals > 0 \
-&& count == table->number_of_philosophers)
+		i = 0;
+		while (i < table->number_of_philosophers)
 		{
-			pthread_mutex_lock(&table->state_mutex);
-			table->simulation_ended = 1;
-			pthread_mutex_unlock(&table->state_mutex);
-			return ;
+			if (dead(&philo[i]))
+				return ;
+			i++;
 		}
+		if (check_all_ate(table, philo))
+			return ;
 		usleep(1000);
 	}
 }

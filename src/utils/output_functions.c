@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 11:25:06 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/11/08 15:34:28 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:51:29 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	ft_putnbr_fd(long n, int fd)
  * @details Prints formatted message: "timestamp ID action".
  * Checks if simulation ended before printing to avoid messages after death.
  * Uses mutex protection to prevent garbled output from multiple threads.
+ * Calculates timestamp DENTRO do mutex para garantir ordem correta.
  * 
  * @param philo Pointer to the philosopher structure
  * @param code Action string (FORK, EAT, SLEEP, THINK)
@@ -79,20 +80,16 @@ void	ft_putnbr_fd(long n, int fd)
 void	output(t_philo *philo, char *code)
 {
 	long	timestamp;
-	int		ended;
 
-	pthread_mutex_lock(&philo->table->state_mutex);
-	ended = philo->table->simulation_ended;
-	pthread_mutex_unlock(&philo->table->state_mutex);
-	if (!ended)
+	pthread_mutex_lock(&philo->table->output);
+	if (!philo->table->simulation_ended)
 	{
-		timestamp = (get_time() - philo->table->start_time);
-		pthread_mutex_lock(&philo->table->output);
+		timestamp = get_time() - philo->table->start_time;
 		ft_putnbr_fd(timestamp, 1);
 		ft_putstr_fd(" ", 1);
 		ft_putnbr_fd(philo->id_philo, 1);
 		ft_putstr_fd(" ", 1);
 		ft_putstr_fd(code, 1);
-		pthread_mutex_unlock(&philo->table->output);
 	}
+	pthread_mutex_unlock(&philo->table->output);
 }
